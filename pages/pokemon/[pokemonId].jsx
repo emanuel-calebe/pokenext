@@ -41,7 +41,7 @@ export default function Pokemon({ pokemon }) {
   const router = useRouter();
 
   if (router.isFallback) {
-    return <div>Carregando</div>
+    return <div>Carregando...</div>
   }
 
 
