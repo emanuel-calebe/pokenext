@@ -2,6 +2,8 @@ import Image from "next/image";
 
 import style from "../../styles/pokemon.module.css";
 
+import { useRouter } from "next/router";
+
 export const getStaticPaths = async () => {
   const maxPokemons = 252;
   const api = "https://pokeapi.co/api/v2/pokemon/";
@@ -19,7 +21,7 @@ export const getStaticPaths = async () => {
 
   return {
     paths,
-    fallback: false,
+    fallback: true,
   };
 };
 
@@ -36,46 +38,55 @@ export const getStaticProps = async (context) => {
 };
 
 export default function Pokemon({ pokemon }) {
-  return (
-    <>
-      <div className="container">
-        <div className={style.pokemon_container}>
-          <h1 className={style.title}>{pokemon.name}</h1>
-          <Image
-            src={`https://cdn.traction.one/pokedex/pokemon/${pokemon.id}.png`}
-            width="200"
-            height="200"
-            alt={pokemon.name}
-          />
-          <div>
-            <h3>Numero: </h3>
-            <p>#{pokemon.id}</p>
-          </div>
-          <div>
-            <h3>Tipo: </h3>
-            <div className={style.types_container}>
-              {pokemon.types.map((item, index) => (
-                <span
-                  key={index}
-                  className={`${style.type} ${style["type_" + item.type.name]}`}
-                >
-                  {item.type.name}
-                </span>
-              ))}
+  const router = useRouter();
+
+  if (router.isFallback) {
+    return <div>Carregando</div>
+  }
+
+
+    return (
+      <>
+        <div className="container">
+          <div className={style.pokemon_container}>
+            <h1 className={style.title}>{pokemon.name}</h1>
+            <Image
+              src={`https://cdn.traction.one/pokedex/pokemon/${pokemon.id}.png`}
+              width="200"
+              height="200"
+              alt={pokemon.name}
+            />
+            <div>
+              <h3>Numero: </h3>
+              <p>#{pokemon.id}</p>
             </div>
-          </div>
-          <div className={style.data_container}>
-            <div className={style.data_height}>
-              <h4>Altura: </h4>
-              <p>{pokemon.height * 10} cm</p>
+            <div>
+              <h3>Tipo: </h3>
+              <div className={style.types_container}>
+                {pokemon.types.map((item, index) => (
+                  <span
+                    key={index}
+                    className={`${style.type} ${
+                      style["type_" + item.type.name]
+                    }`}
+                  >
+                    {item.type.name}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className={style.data_weight}>
-              <h4>Peso: </h4>
-              <p>{pokemon.weight / 10} kg</p>
+            <div className={style.data_container}>
+              <div className={style.data_height}>
+                <h4>Altura: </h4>
+                <p>{pokemon.height * 10} cm</p>
+              </div>
+              <div className={style.data_weight}>
+                <h4>Peso: </h4>
+                <p>{pokemon.weight / 10} kg</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
 }
