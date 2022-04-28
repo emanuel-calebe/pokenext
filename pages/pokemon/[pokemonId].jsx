@@ -5,7 +5,7 @@ import style from "../../styles/pokemon.module.css";
 import { useRouter } from "next/router";
 
 export const getStaticPaths = async () => {
-  const maxPokemons = 252;
+  const maxPokemons = 120;
   const api = "https://pokeapi.co/api/v2/pokemon/";
 
   const res = await fetch(`${api}/?limit=${maxPokemons}`);
